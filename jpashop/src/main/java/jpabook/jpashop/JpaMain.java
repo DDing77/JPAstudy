@@ -1,12 +1,13 @@
-package hellojpa;
+package jpabook.jpashop;
 
-import javax.persistence.EntityManager;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
+
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
-// 스프링 미 사용시
 public class JpaMain {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
@@ -18,11 +19,12 @@ public class JpaMain {
         tx.begin();
 
         try{
-            Member member = new Member();
+            Order order = em.find(Order.class, 1L);
+            Long memberId = order.getMemberId();
 
-            member.setUsername("C");
-
-            em.persist(member);
+//            Member member = em.find(Member.class, memberId);
+//
+//            Member findMember = order.getMember();
 
             tx.commit();
         } catch (Exception e) {
@@ -30,7 +32,7 @@ public class JpaMain {
         } finally {
             em.close(); // 꼭 엔티티매니저 사용 후 닫아주기
         }
-        
+
         emf.close();
     }
 }
