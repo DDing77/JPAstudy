@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -17,13 +19,17 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-//    @Column(name = "TEAM_ID")
-//    private Long teamId;
-
-    // mapping
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 1대다 에서 야매로 읽기전용을 만들어 양방향 관계 만듬
     private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
+    // 다대다 중간 연결 테이블
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> products = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -41,14 +47,5 @@ public class Member {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
-    }
 
-    public void changeTeam(Team team) {
-        this.team = team;
-
-        // 객체지향을 위해 연관관계 양방향 값 설정
-        team.getMembers().add(this);
-    }
 }
